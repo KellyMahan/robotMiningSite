@@ -177,7 +177,9 @@ function runEntityInstructions(idOfEntity, entity)
 					if #resources==0 then break end
 				end
 				
-				local itemEntity = entity.surface.create_entity{stack=stack,position=position,name="item-on-ground"}
+				local itemEntity
+				status, itemEntity = pcall(handleErrorLine180, entity, stack, position, name)
+
 				detectCollision[position.x][position.y]=detectCollision[position.x][position.y]+1
 				if itemEntity and itemEntity.valid then
 					itemEntity.order_deconstruction(entity.force)
@@ -187,4 +189,9 @@ function runEntityInstructions(idOfEntity, entity)
 	end
 	
 	return updateEveryTicks,"working..."
+end
+
+function handleErrorLine180(entity, stack, position, name)
+	local itemEntity = entity.surface.create_entity{stack=stack,position=position,name="item-on-ground"}
+	return itemEntity
 end
